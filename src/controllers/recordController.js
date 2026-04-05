@@ -1,23 +1,19 @@
 const Record = require("../models/Record");
-
-// CREATE
 exports.createRecord = async (req, res) => {
     try {
         const { amount, type, category, date } = req.body;
 
-        console.log("REQ.USER:", req.user); // debug
+        console.log("REQ.USER:", req.user); 
 
         const record = new Record({
             amount,
             type,
             category,
             date,
-            user: req.user.id   // ✅ FORCE SET
+            user: req.user.id  
         });
 
         await record.save();
-
-        console.log("SAVED RECORD:", record); // ✅ verify
 
         res.json(record);
     } catch (err) {
@@ -26,7 +22,6 @@ exports.createRecord = async (req, res) => {
     }
 };
 
-// READ (with filtering)
 exports.getRecords = async (req, res) => {
     const { type, category, startDate, endDate } = req.query;
 
@@ -34,12 +29,10 @@ exports.getRecords = async (req, res) => {
         isDeleted: false
     };
 
-    // ✅ ROLE LOGIC
     if (req.user.role !== "admin") {
-        filter.user = req.user.id;  // Analyst → only own records
+        filter.user = req.user.id;  
     }
 
-    // ✅ FILTERS
     if (type) filter.type = type;
     if (category) filter.category = category;
 
@@ -49,14 +42,12 @@ exports.getRecords = async (req, res) => {
         if (endDate) filter.date.$lte = new Date(endDate);
     }
 
-    // ✅ POPULATE USER DATA HERE
     const records = await Record.find(filter)
         .populate("user", "name email role");
 
     res.json(records);
 };
 
-// UPDATE
 exports.updateRecord = async (req, res) => {
     const record = await Record.findByIdAndUpdate(
         req.params.id,
@@ -71,7 +62,6 @@ exports.updateRecord = async (req, res) => {
     res.json(record);
 };
 
-// DELETE (soft delete)
 exports.deleteRecord = async (req, res) => {
     const record = await Record.findByIdAndUpdate(
         req.params.id,

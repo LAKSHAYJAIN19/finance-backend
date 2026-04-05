@@ -5,7 +5,7 @@ const app = express();
 app.use(express.json());
 
 app.use(cors({
-  origin: "https://your-frontend.vercel.app",
+  origin: "https://finance-frontend-nine-amber.vercel.app/",
   credentials: true
 }));
 app.use(express.json());

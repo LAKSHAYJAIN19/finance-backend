@@ -10,7 +10,6 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// ✅ THIS LINE IS CRITICAL
 app.use("/api", routes);
 
 app.get("/", (req, res) => {

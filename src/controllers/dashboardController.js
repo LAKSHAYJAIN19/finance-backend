@@ -1,31 +1,8 @@
 const Record = require("../models/Record");
-// exports.summary = async (req, res) => {
-//     let filter = { isDeleted: false };
-//
-//     if (req.user.role !== "admin") {
-//         filter.user = req.user.id;
-//     }
-//
-//     const records = await Record.find(filter);
-//
-//     let income = 0, expense = 0;
-//
-//     records.forEach(r => {
-//         if (r.type === "income") income += r.amount;
-//         else expense += r.amount;
-//     });
-//
-//     res.json({
-//         totalIncome: income,
-//         totalExpense: expense,
-//         netBalance: income - expense
-//     });
-// };
 exports.summary = async (req, res) => {
     try {
         let filter = { isDeleted: false };
 
-        // Analyst → only own data
         if (req.user.role !== "admin") {
             filter.user = req.user.id;
         }
@@ -39,7 +16,6 @@ exports.summary = async (req, res) => {
             else expense += r.amount;
         });
 
-        // ✅ ADMIN: group by user
         let userSummary = {};
 
         if (req.user.role === "admin") {
